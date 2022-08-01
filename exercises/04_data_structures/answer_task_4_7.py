@@ -15,6 +15,7 @@
 проверять результат.
 """
 
-mac = "AAAA:BBBB:CCCC".replace(':', '').replace('A', '1010').replace('B', '1011').replace('C', '1100')
+mac = "AAAA:BBBB:CCCC"
 
-print(mac)
+bin_mac = "{:b}".format(int(mac.replace(":", ""), 16))
+print(bin_mac)

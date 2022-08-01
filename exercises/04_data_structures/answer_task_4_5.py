@@ -20,10 +20,11 @@
 проверять результат.
 """
 
-command1 = "switchport trunk allowed vlan 1,2,3,5,8".split(' ')[-1].split(',')
-command2 = "switchport trunk allowed vlan 1,3,8,9".split(' ')[-1].split(',')
-vlan_list_1 = set(command1)
-vlan_list_2 = set(command2)
-vlan_lists = vlan_list_1 & vlan_list_2
-result = sorted(list(vlan_lists))
+command1 = "switchport trunk allowed vlan 1,2,3,5,8"
+command2 = "switchport trunk allowed vlan 1,3,8,9"
+
+vlans1 = command1.split()[-1].split(",")
+vlans2 = command2.split()[-1].split(",")
+
+result = sorted(set(vlans1) & set(vlans2))
 print(result)

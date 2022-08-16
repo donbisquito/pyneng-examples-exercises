@@ -20,3 +20,8 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+with open('CAM_table.txt', 'r') as f:
+    for line in f:
+        line = line.split()
+        if line and line[0].isdigit():
+            print('''{:10}{:20}{}'''.format(line[0], line[1], line[3]))

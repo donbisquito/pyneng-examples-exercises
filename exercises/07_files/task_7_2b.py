@@ -15,5 +15,14 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+from sys import argv
+
+src_file = argv[1]
+dst_file = argv[2]
 
 ignore = ["duplex", "alias", "configuration"]
+
+with open(src_file, 'r') as f, open(dst_file, 'w') as d:
+    for line in f:
+        if line.startswith('!') == False and ignore[0] not in line and ignore[1] not in line and ignore[2] not in line:
+            d.write(line)

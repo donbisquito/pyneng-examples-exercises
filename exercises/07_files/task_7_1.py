@@ -14,3 +14,27 @@ Outbound Interface    FastEthernet0/0
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+conf_list = {}
+list_num = 0
+
+with open('ospf.txt', 'r') as f:
+    for line in f:
+        line = line.split()
+        list_num += 1
+        conf_list[list_num] = {}
+        conf_list[list_num]['Prefix'] = line[1]
+        conf_list[list_num]['AD/Metric'] = line[2][1:7]
+        conf_list[list_num]['Next-Hop'] = line[4][:-1]
+        conf_list[list_num]['Last update'] = line[5][:-1]
+        conf_list[list_num]['Outbound Interface'] = line[6]
+
+
+for num, info in conf_list.items():
+    for name, value in info.items():
+        print("{:22}{}".format(name, value))
+    print('\n')
+
+
+        
+
+

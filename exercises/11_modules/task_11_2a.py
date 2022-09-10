@@ -73,6 +73,10 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+from task_11_1 import parse_cdp_neighbors
+from task_11_2 import create_network_map
+from draw_network_graph import draw_topology
+
 
 infiles = [
     "sh_cdp_n_sw1.txt",
@@ -80,3 +84,15 @@ infiles = [
     "sh_cdp_n_r2.txt",
     "sh_cdp_n_r3.txt",
 ]
+topology = create_network_map(infiles)
+
+def unique_network_map(topology_dict):
+    uniq_topology = {}
+    for key, value in topology_dict.items():
+        if not uniq_topology.get(value) == key:
+            uniq_topology[key] = value
+    return uniq_topology
+
+uniq_topology = unique_network_map(topology)
+
+draw_topology(uniq_topology, 'img/testfile')

@@ -17,3 +17,22 @@ IP-адрес считается доступным, если выполнени
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
+import subprocess
+
+ip_list = ['8.8.8.8', '115.115.115.115', '127.0.12.12', '192.55.13.4']
+
+def ping_ip_addresses(ip_list):
+    avalable_ip = []
+    unavalable_ip = []
+    for ip in ip_list:
+        reply = subprocess.run(['ping','-c', '2', '-n', ip], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if reply.returncode == 0:
+            avalable_ip.append(ip)
+        else:
+            unavalable_ip.append(ip)
+
+    return avalable_ip, unavalable_ip
+
+
+print(ping_ip_addresses(ip_list))
+

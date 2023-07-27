@@ -36,31 +36,18 @@
 """
 import ipaddress
 
-ip_list = ['8.8.4.4', '1.1.1.1-3', '172.21.41.128-172.21.41.132']
 
-
-
-def convert_ranges_to_ip_list(ip_list):
-    convert_ip = []
-    for ip in ip_list:
-        if "-" in ip:
-            from_ip = ip.split('-')[0]
-            to_ip = ip.split('-')[1]
-            net = from_ip.split('.')
-            net = ".".join(net[0:3]) + "."
-            if len(to_ip) < 3:
-                to_ip = net + to_ip
-            from_ip_last_octet = int(from_ip.split('.')[-1])
-            to_ip_last_octet = int(to_ip.split('.')[-1])
-            while to_ip_last_octet >= from_ip_last_octet:
-                ip = net + str(from_ip_last_octet)
-                convert_ip.append(ip)
-                from_ip_last_octet += 1
+def convert_ranges_to_ip_list(ip_addresses):
+    ip_list = []
+    for ip_address in ip_addresses:
+        if "-" in ip_address:
+            start_ip, stop_ip = ip_address.split("-")
+            if "." not in stop_ip:
+                stop_ip = ".".join(start_ip.split(".")[:-1] + [stop_ip])
+            start_ip = ipaddress.ip_address(start_ip)
+            stop_ip = ipaddress.ip_address(stop_ip)
+            for ip in range(int(start_ip), int(stop_ip) + 1):
+                ip_list.append(str(ipaddress.ip_address(ip)))
         else:
-            convert_ip.append(ip)
-    return convert_ip
-
-
-if __name__ == "__main__":
-    ip_range = convert_ranges_to_ip_list(ip_list)
-    print(ip_range)
+            ip_list.append(ip_address)
+    return ip_list

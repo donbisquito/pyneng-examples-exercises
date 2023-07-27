@@ -17,9 +17,24 @@ IP-адрес считается доступным, если выполнени
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
-import subprocess
+import subprocess as sp
 
 
 #test
 
-#test from win
+ip_list = ['8.8.8.8', '192.168.0.1', '1.1.1.1', '172.16.0.1']
+
+def ping_ip_addresses(ip_list):
+    available_ips = []
+    undreach = []
+    for ip in ip_list:
+        reply = sp.run(['ping', '-c', '3', '-n', ip], stdout=sp.DEVNULL, stderr=sp.DEVNULL)
+        if reply.returncode == 0:
+            available_ips.append(ip)
+        else:
+            undreach.append(ip)
+    return available_ips, undreach
+
+if __name__ == "__main__":
+    result = ping_ip_addresses(ip_list)
+    print(result)

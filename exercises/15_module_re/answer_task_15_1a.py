@@ -24,21 +24,16 @@
 а не ввод пользователя.
 
 """
-
 import re
 
-
 def get_ip_from_cfg(config):
-  result = {}   
-  with open(config, 'r') as f:
-      for line in f:
-          line = line.rstrip()
-          if line.startswith('interface'):
-              interface = re.search(r'interface (\S+)', line).group(1)
-          elif line.startswith(' ip address'):
-              match = re.search(r' ip address (\S+) +(\S+)', line)
-              result[interface] = (match.group(1),match.group(2))
-      return result
+    with open(config) as f:
+        regex = re.compile(
+            r"interface (?P<intf>\S+)\n"
+            r"( .*\n)*"
+            r" ip address (?P<ip>\S+) (?P<mask>\S+)"
+        )
+        match = regex.finditer(f.read())
 
-if __name__ == "__main__":
-    print(get_ip_from_cfg('config_r2.txt'))
+    result = {m.group("intf"): m.group("ip", "mask") for m in match}
+    return result

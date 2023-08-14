@@ -35,20 +35,20 @@ object network LOCAL_10.1.9.5
 import re
 
 
-def convert_ios_nat_to_asa(input, output):
-    regex = r'\w+ +\w+ +\w+ +\w+ +(?P<protocol>tcp) +(?P<ip>\S+) +(?P<sport>\S+) +\w+ +\w+\/\w +(?P<dport>\S+)'
-    with open(input, 'r') as f, open(output, 'w') as w:
-        for line in f:
-            line = line.rstrip()
-            match = re.search(regex, line)
-            if match:
-                protocol = match.group('protocol')
-                ip = match.group('ip')
-                sport = match.group('sport')
-                dport = match.group('dport')
-                w.write(f'object network LOCAL_{ip}\n host {ip}\n nat (inside,outside) static interface service {protocol} {sport} {dport}\n')
-
+def convert_ios_nat_to_asa(cisco_ios, cisco_asa):
+    regex = (
+        "tcp (?P<local_ip>\S+) +(?P<lport>\d+) +interface +\S+ (?P<outside_port>\d+)"
+    )
+    asa_template = (
+        "object network LOCAL_{local_ip}\n"
+        " host {local_ip}\n"
+        " nat (inside,outside) static interface service tcp {lport} {outside_port}\n"
+    )
+    with open(cisco_ios) as f, open(cisco_asa, "w") as asa_nat_cfg:
+        data = re.finditer(regex, f.read())
+        for match in data:
+            asa_nat_cfg.write(asa_template.format(**match.groupdict()))
 
 
 if __name__ == "__main__":
-    convert_ios_nat_to_asa('cisco_nat_config.txt','cisco_asa_config.txt')
+    convert_ios_nat_to_asa("cisco_nat_config.txt", "cisco_asa_config.txt")
